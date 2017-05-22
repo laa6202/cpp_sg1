@@ -10,6 +10,7 @@
 #include <string>
 #include "opencv2/opencv.hpp"
 #include "alg.h"
+#include "alg2.h"
 #include "imgCheck.h"
 
 using namespace std;
@@ -18,7 +19,7 @@ using namespace cv;
 //String fn0 = "t5/31_br103_con125_st110.jpg";
 
 int main1() {
-	cout << "!!!Hello SG1!!!" << endl; // prints !!!Hello World!!!
+	cout << "!!!Hello SG1  alg1!!!" << endl; // prints !!!Hello World!!!
 
 	String fn0,fn1;
 	getBackFn(fn0);
@@ -71,8 +72,55 @@ int main1() {
 }
 
 
+int main2(){
+	cout << "!!!Hello SG1  alg2!!!" << endl; // prints !!!Hello World!!!
+	int num = 3;
+
+	String fn0,fn1;
+	getBackFn2(fn0);
+	getFontFn2(fn1);
+
+	Mat Ab,Af;
+	if(loadImg(Ab,fn0))	exit(-2);
+	if(loadImg(Af,fn1)) exit(-2);
+
+	Mat Bf0,Bf;
+	int bline = 10; //para : blance line for judge
+	blanceAf(Ab,Af,Bf0,bline);
+	blanceAf(Ab,Bf0,Bf,bline);
+
+	Mat C;
+	int th_xor = 0;	//thershold of xor image
+	xorImg(Ab,Bf,C,th_xor);
+
+//	Mat C = Af.clone();
+	int pxLeg[num];
+	getLeg2(C,pxLeg,num);
+
+	int pyDown=0,pyUp=0;
+	searchDown2(C,pxLeg,150,pyDown,num);
+
+	Mat D = C.clone();
+
+	drawDLine(D , pxLeg,pyDown,pyUp,num);
+
+	imshow("main2",D);
+	while(1){
+		uchar key =  waitKey(50);
+		if(key == 'q')
+			break;
+	}
+
+
+	imwrite("D.jpg",D);
+
+	return 0;
+}
+
+
 int main(){
-	main1();
+	main2();
+	return 0;
 }
 
 

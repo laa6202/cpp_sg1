@@ -21,5 +21,10 @@ using namespace cv;
 int getBackFn2(String & fn0);
 int getFontFn2(String & fn0);
 
+int getLeg2(Mat C, int pxLeg[], int num);
+
+int searchDown2(Mat C, int pxLeg[], int th_down,int & py,int num);
+
+int drawDLine(Mat &D , int pxLeg[],int pyDown,int pyUp,int num);
 
 #endif /* ALG2_H_ */

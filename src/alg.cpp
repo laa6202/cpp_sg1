@@ -229,8 +229,9 @@ int getLeg(Mat C, int pxLeft,int pxRight){
 int searchDown(Mat C, int pxLeg, int th_down,int &py){
 	for(int i=C.rows-1;i>=300;i--){
 		//cout << "point ["<< i<<"]= " << C.at<uchar>(i,pxLeg)+0.0 <<endl;
-		if(py == 0)
+		if(py == 0){
 			py = (C.at<uchar>(i,pxLeg) >= th_down) ? i: py;
+		}
 	}
 	cout << "...Search Down : \t th_down = " << th_down << " \t";
 	cout << "py_down = " << py <<endl;
