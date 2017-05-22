@@ -15,9 +15,9 @@
 using namespace std;
 using namespace cv;
 
-String fn0 = "t5/31_br103_con125_st110.jpg";
+//String fn0 = "t5/31_br103_con125_st110.jpg";
 
-int main() {
+int main1() {
 	cout << "!!!Hello SG1!!!" << endl; // prints !!!Hello World!!!
 
 	String fn0,fn1;
@@ -57,7 +57,7 @@ int main() {
 	line(D, Point(40,pyDown), Point(600,pyDown), Scalar(255,0,0), 1);
 	line(D, Point(40,pyUp), Point(600,pyUp), Scalar(255,0,0), 1);
 
-	imshow("TC1",D);
+	imshow("main1",D);
 	while(1){
 		uchar key =  waitKey(50);
 		if(key == 'q')
@@ -70,6 +70,10 @@ int main() {
 
 }
 
+
+int main(){
+	main1();
+}
 
 
 
