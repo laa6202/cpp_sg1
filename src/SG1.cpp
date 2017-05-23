@@ -74,7 +74,7 @@ int main1() {
 
 int main2(){
 	cout << "!!!Hello SG1  alg2!!!" << endl; // prints !!!Hello World!!!
-	int num = 3;
+	int num = 7;
 
 	String fn0,fn1;
 	getBackFn2(fn0);
@@ -98,11 +98,21 @@ int main2(){
 	getLeg2(C,pxLeg,num);
 
 	int pyDown=0,pyUp=0;
-	searchDown2(C,pxLeg,150,pyDown,num);
+	int th_down = 150;
+	int th_up = 150;
+	searchDown2(C,pxLeg,th_down,pyDown,num);
 
-	Mat D = C.clone();
+	Mat D = Af.clone();
+	searchUp4(D,pxLeg,pyDown,th_up,pyUp,num);
+
 
 	drawDLine(D , pxLeg,pyDown,pyUp,num);
+
+	int pix_shoe_height =pyDown -  pyUp;
+	float pix_cm_ratio =  0.01106;
+	float cm_shoe_height = pix_shoe_height * pix_cm_ratio;
+	cout << "...result : \t pix_shoe_height = " << pix_shoe_height << "\t";
+	cout << "CM shoe height = "<<cm_shoe_height << endl;
 
 	imshow("main2",D);
 	while(1){
