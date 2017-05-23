@@ -14,14 +14,22 @@
 int getBackFn2(String & fn0){
 
 	//fn0 = "t8/Mon May 22 16-41-07.png";
-	fn0 = "t8/Mon May 22 16-41-07.png";
+	//fn0 = "t8/Mon May 22 16-41-07.png";
+	fn0 = "t9/Tue May 23 16-49-54.png";
 	cout << "...get back file:" << fn0 <<endl;
 	return 0;
 }
 
 int getFontFn2(String & fn0){
 	//fn0 = "t8/Mon May 22 16-40-33.png";
-	fn0 = "t8/Mon May 22 16-42-01.png";
+	//fn0 = "t8/Mon May 22 16-42-01.png";
+	//fn0 = "t9/Tue May 23 16-49-48.png";
+	//fn0 = "t9/Tue May 23 17-28-40.png";
+	//fn0 = "t9/Tue May 23 17-32-09.png";
+	//fn0 = "t9/Tue May 23 16-55-16.png";
+	//fn0 = "t9/Tue May 23 17-43-39.png";
+	//fn0 = "t9/Tue May 23 17-50-18.png";
+	fn0 = "t9/Tue May 23 17-55-50.png";
 	cout << "...get font file:" << fn0 <<endl;
 	return 0;
 }
@@ -39,7 +47,7 @@ int searchDown2(Mat C, int pxLeg[], int th_down,int & py,int num){
 	int pyDown[num];
 	for(int i=0;i<num ;i++){
 		pyDown[i] = 0;
-		searchDown(C,pxLeg[i],th_down,pyDown[i]);
+		searchDownCore(C,pxLeg[i],th_down,pyDown[i]);
 		//cout << "pyDown["<< i << "] = " <<pyDown[i] << endl;
 	}
 
@@ -58,8 +66,35 @@ int searchDown2(Mat C, int pxLeg[], int th_down,int & py,int num){
 	if(num_val ==0){
 		return -1;
 	}
-	py = sum_pyDown / num_val;
-//	py = pyDown[4];
+//	py = sum_pyDown / num_val;
+	py = pyDown[4];
+	cout << "...searchDown2 : \t num_val = "<<num_val<<"\t py = " <<py <<endl;
+	return 0;
+}
+
+
+int searchDownCore(Mat C, int pxLeg, int th_down, int &py){
+	int height = C.rows;
+	int diff[height-1];
+	int max_diff=0;
+	for(int i=0;i<height-4;i++){
+		diff[i] = abs(C.at<uchar>(i,pxLeg) - C.at<uchar>(i+3,pxLeg));
+		max_diff = (diff[i] > max_diff) ? diff[i] : max_diff;
+//		cout << "diff[" << i<<"] = " << diff[i] <<" \t";
+//		cout << "C[pxleg]["<<i<<"] = " <<C.at<uchar>(i,pxLeg)+0.0 <<endl;
+	}
+
+	int now_th = (th_down <= max_diff*2/3) ?th_down : max_diff*2/3;
+	int pyDown = C.rows;
+	for(int i=C.rows-10;i>height/2;i--){
+		if(pyDown == C.rows){
+			pyDown = (diff[i] >= now_th) ? i : pyDown;
+		}
+	}
+	py = pyDown;
+	cout << "......searchDownCore : \t max_diff = "<< max_diff <<"\t";
+	cout << "th_down = "<< th_down <<"\t now_th = "<< now_th << "\t";
+	cout << "pyDown =  "<<pyDown <<endl;
 	return 0;
 }
 
@@ -70,7 +105,7 @@ int drawDLine(Mat &D , int pxLeg[],int pyDown,int pyUp,int num){
 	}
 
 
-	line(D, Point(20,pyDown), Point(D.cols-20,pyDown), Scalar(255,0,0), 3);
+	line(D, Point(20,pyDown), Point(D.cols-20,pyDown), Scalar(255,0,0), 1);
 	line(D, Point(20,pyUp), Point(D.cols-20,pyUp), Scalar(255,0,0), 3);
 	return 0;
 }
@@ -108,7 +143,8 @@ int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num){
 	if(num_val ==0){
 		return -1;
 	}
-	py = sum_pyUp / num_val;
+	//py = sum_pyUp / num_val;
+	py = pyUp[3];
 	cout << "...searchUp4 : \t num_val = " << num_val <<"\t";
 	cout << "py_Up = " << py<<endl;
 

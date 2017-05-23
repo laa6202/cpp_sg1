@@ -24,6 +24,7 @@ int getFontFn2(String & fn0);
 int getLeg2(Mat C, int pxLeg[], int num);
 
 int searchDown2(Mat C, int pxLeg[], int th_down,int & py,int num);
+int searchDownCore(Mat C, int pxLeg, int th_down, int &py);
 int searchUp3(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num);
 int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num);
 int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py);
