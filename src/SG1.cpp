@@ -74,8 +74,15 @@ int main1() {
 
 int main2(){
 	cout << "!!!Hello SG1  alg2!!!" << endl; // prints !!!Hello World!!!
-	int num = 7;
+	int num = 9;
+	int bline = 10; //para : blance line for judge
+	int th_xor = 0;	//thershold of xor image
+	int th_down = 150;
+	int th_up = 150;
+	int sel_diff =30;
+	float pix_cm_ratio =  0.01106;
 
+//--------- step ----------
 	String fn0,fn1;
 	getBackFn2(fn0);
 	getFontFn2(fn1);
@@ -85,31 +92,30 @@ int main2(){
 	if(loadImg(Af,fn1)) exit(-2);
 
 	Mat Bf0,Bf;
-	int bline = 10; //para : blance line for judge
+
 	blanceAf(Ab,Af,Bf0,bline);
 	blanceAf(Ab,Bf0,Bf,bline);
 
 	Mat C;
-	int th_xor = 0;	//thershold of xor image
+
 	xorImg(Ab,Bf,C,th_xor);
 
-//	Mat C = Af.clone();
 	int pxLeg[num];
 	getLeg2(C,pxLeg,num);
 
-	int pyDown=0,pyUp=0;
-	int th_down = 150;
-	int th_up = 150;
+	int pyDown[num],pyUp[num];
+	int pyFoot=0, pyHead=0;
+
 	searchDown2(C,pxLeg,th_down,pyDown,num);
+	selPyDown(pyDown,sel_diff,pyFoot,num);
+
 
 	Mat D = Af.clone();
-	searchUp4(D,pxLeg,pyDown,th_up,pyUp,num);
-
-
-	drawDLine(D , pxLeg,pyDown,pyUp,num);
+	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num);
+	drawDCircle(D,pxLeg,pyDown,pyUp,num);
+	drawDLine(D , pxLeg,pyFoot,pyHead,num);
 
 	int pix_shoe_height =pyDown -  pyUp;
-	float pix_cm_ratio =  0.01106;
 	float cm_shoe_height = pix_shoe_height * pix_cm_ratio;
 	cout << "...result : \t pix_shoe_height = " << pix_shoe_height << "\t";
 	cout << "CM shoe height = "<<cm_shoe_height << endl;
@@ -121,9 +127,14 @@ int main2(){
 			break;
 	}
 
-
-	imwrite("D.jpg",D);
-
+	if(save_file == 1){
+		imwrite("Ab.jpg",Ab);
+		imwrite("Af.jpg",Af);
+		imwrite("Bf0.jpg",Bf0);
+		imwrite("Bf.jpg",Bf);
+		imwrite("C.jpg",C);
+		imwrite("D.jpg",D);
+	}
 	return 0;
 }
 
