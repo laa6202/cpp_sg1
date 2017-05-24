@@ -74,9 +74,11 @@ int main1() {
 
 int main2(){
 	cout << "!!!Hello SG1  alg2!!!" << endl; // prints !!!Hello World!!!
+	int save_file = 0;
 	int num = 9;
 	int bline = 10; //para : blance line for judge
-	int th_xor = 0;	//thershold of xor image
+	int th_xor = 50;	//thershold of xor image
+	int mask_width = 20;	//pix width of py mask
 	int th_down = 150;
 	int th_up = 150;
 	int sel_diff =30;
@@ -97,8 +99,10 @@ int main2(){
 	blanceAf(Ab,Bf0,Bf,bline);
 
 	Mat C;
+	xorImg2(Ab,Bf,C,th_xor);
+	int pyMask[C.cols];
+	getUpMask(C,pyMask,mask_width);
 
-	xorImg(Ab,Bf,C,th_xor);
 
 	int pxLeg[num];
 	getLeg2(C,pxLeg,num);
@@ -111,7 +115,7 @@ int main2(){
 
 
 	Mat D = Af.clone();
-	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num);
+	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,pyMask);
 	drawDCircle(D,pxLeg,pyDown,pyUp,num);
 	drawDLine(D , pxLeg,pyFoot,pyHead,num);
 

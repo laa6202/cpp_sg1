@@ -30,3 +30,16 @@ float getSumLine(Mat M,int lineNo){
 	return sum;
 }
 
+
+
+int checkLineWhite(Mat C, int y,int x,int len,int & isWhite){
+	isWhite = 0;
+	for(int i=y;i<y+len;i++){
+		if(C.at<uchar>(i,x) == 255){
+			isWhite = 1;
+			break;
+		}
+	}
+
+	return 0;
+}

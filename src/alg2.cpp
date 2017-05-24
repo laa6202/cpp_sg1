@@ -26,10 +26,10 @@ int getFontFn2(String & fn0){
 	//fn0 = "t9/Tue May 23 16-49-48.png";
 	//fn0 = "t9/Tue May 23 17-28-40.png";
 	//fn0 = "t9/Tue May 23 17-32-09.png";
-	//fn0 = "t9/Tue May 23 16-55-16.png";
+	//fn0 = "t9/Tue May 23 16-55-16.png";			//head
 	//fn0 = "t9/Tue May 23 17-43-39.png";
-	fn0 = "t9/Tue May 23 17-50-18.png";		//error
-	//fn0 = "t9/Tue May 23 17-55-50.png";
+	//fn0 = "t9/Tue May 23 17-50-18.png";		//error
+	fn0 = "t9/Tue May 23 17-55-50.png";
 	cout << "...get font file:" << fn0 <<endl;
 	return 0;
 }
@@ -130,7 +130,7 @@ int searchDownCore(Mat C, int pxLeg, int th_down, int &py){
 			pyDown = (diff[i] >= now_th) ? i : pyDown;
 		}
 	}
-	py = pyDown;
+	py = pyDown-5;
 //	cout << "......searchDownCore : \t max_diff = "<< max_diff <<"\t";
 //	cout << "th_down = "<< th_down <<"\t now_th = "<< now_th << "\t";
 //	cout << "pyDown =  "<<pyDown <<endl;
@@ -154,15 +154,15 @@ int drawDLine(Mat &D , int pxLeg[],int pyFoot,int pyHead,int num){
 
 
 
-int searchUp3(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num){
-	searchUpCore(D,pxLeg[4],pyDown,th_up,py);
+int searchUp3(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num,int pyMask[]){
+	searchUpCore(D,pxLeg[4],pyDown,th_up,py,pyMask);
 	return 0;
 }
 
-int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int pyUp[],int num){
+int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int pyUp[],int num,int pyMask[]){
 	for(int i=0;i<num;i++){
 		pyUp[i]=0;
-		searchUpCore(D,pxLeg[i],pyDown,th_up,pyUp[i]);
+		searchUpCore(D,pxLeg[i],pyDown,th_up,pyUp[i],pyMask);
 	}
 
 
@@ -194,29 +194,33 @@ int selPyUp(int pyUp[],int &py,int num){
 	return 0;
 }
 
-int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py){
+int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py, int pyMask[]){
 	int height = (pyDown > 50) ? (pyDown - 50) : pyDown;
 	int diff[height],max_diff = 0;
 	int tmp_py=0;
-	for(int i=1;i<height;i++){
+	for(int i=pyMask[pxLeg];i<height;i++){
 		diff[i] = abs(D.at<uchar>(i,pxLeg) - D.at<uchar>(i+5,pxLeg));
 		max_diff = (diff[i] >= max_diff) ? diff[i] : max_diff;
 //		cout << "diff [" << i <<"] = " << diff[i] <<"\t";
 //		cout << "\t D[pxLeg]["<<i<<"] = " <<D.at<uchar>(i,pxLeg)+0.0 <<endl;
 	}
 
+
+	if(max_diff <= 50)
+		max_diff = 300;
+
 	int now_th = (th_up <= max_diff *2/3) ? th_up : max_diff *2/3;
-	for(int i=height-1;i>=1;i--){
+	for(int i=height-1;i>=pyMask[pxLeg];i--){
 		if(tmp_py ==0){
 			tmp_py = (diff[i] >= now_th) ? i: tmp_py;
 			//tmp_py = (diff >= max_diff *2/3) ? i: tmp_py;
 		}
 	}
 	py = tmp_py + 5;
-//	cout << "......searchUpCore : \t th_up = " << th_up << "\t ";
-//	cout << "max_diff = " << max_diff << "\t";
-//	cout << "now_th = " << now_th << "\t";
-//	cout << "py_up = " << py+0.0 << endl;
+	cout << "......searchUpCore : \t th_up = " << th_up << "\t ";
+	cout << "max_diff = " << max_diff << "\t";
+	cout << "now_th = " << now_th << "\t pxLeg = " << pxLeg << "\t";
+	cout << "py_up = " << py+0.0 << endl;
 
 
 	return 0;
@@ -233,3 +237,39 @@ int drawDCircle(Mat &D,int pxLeg[],int pyDown[],int pyUp[],int num){
 	}
 	return 0;
 }
+
+
+int xorImg2(Mat Ab, Mat Bf, Mat &C,int th_xor){
+	C = Bf - Bf;	//build C
+	int diff = 0;
+	for(int i=0;i<C.rows;i++){
+		for(int j=0;j<C.cols;j++){
+			diff = abs(Bf.at<uchar>(i,j) - Ab.at<uchar>(i,j));
+			if(diff >= th_xor)
+				C.at<uchar>(i,j) = 255;
+			else
+				C.at<uchar>(i,j) = 0;
+		}
+	}
+
+	return 0;
+}
+
+
+int getUpMask(Mat C, int pyMask[], int mask_width){
+	int isWhite;
+	for(int i=0;i<C.cols;i++){
+		for(int j=0;j<C.rows-mask_width;j++){
+			checkLineWhite(C, j,i,mask_width, isWhite);
+			if(isWhite){
+				pyMask[i] = j + mask_width;
+				break;
+			}
+		}
+		//cout << "pyMask["<<i<<"] = "<< pyMask[i] << endl;
+	}
+
+	return 0;
+}
+
+
