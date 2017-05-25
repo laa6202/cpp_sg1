@@ -22,14 +22,19 @@ int getBackFn2(String & fn0){
 
 int getFontFn2(String & fn0){
 	//fn0 = "t8/Mon May 22 16-40-33.png";			//one line skew litter
-	//fn0 = "t8/Mon May 22 16-42-01.png";				//liang xie
+	//fn0 = "t8/Mon May 22 16-42-01.png";			//liang xie
+
 	//fn0 = "t9/Tue May 23 16-49-48.png";
-	//fn0 = "t9/Tue May 23 17-28-40.png";
-	//fn0 = "t9/Tue May 23 17-32-09.png";
-	//fn0 = "t9/Tue May 23 16-55-16.png";			//head
-	//fn0 = "t9/Tue May 23 17-43-39.png";
-	//fn0 = "t9/Tue May 23 17-50-18.png";		//error
-	//fn0 = "t9/Tue May 23 17-55-50.png";
+	//fn0 = "t9/Tue May 23 16-55-16.png";			//head  3 point error
+	//fn0 = "t9/Tue May 23 17-28-40.png";			//two big skew
+	//fn0 = "t9/Tue May 23 17-32-09.png";			//one big skew
+	//fn0 = "t9/Tue May 23 17-32-00.png";			//head
+	//fn0 = "t9/Tue May 23 17-43-39.png";			//you gen
+	//fn0 = "t9/Tue May 23 17-50-18.png";			//wuxian
+	//fn0 = "t9/Tue May 23 17-55-50.png";			//tuoxie	caizhi
+	//fn0 = "t9/Tue May 23 17-43-57.png";			//head
+	fn0 = "t9/Tue May 23 18-03-00.png";
+
 	cout << "...get font file:" << fn0 <<endl;
 	return 0;
 }
@@ -155,14 +160,14 @@ int drawDLine(Mat &D , int pxLeg[],int pyFoot,int pyHead,int num){
 
 
 int searchUp3(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num,int pyMask[]){
-	searchUpCore(D,pxLeg[4],pyDown,th_up,py,pyMask);
+	//searchUpCore(D,pxLeg[4],pyDown,th_up,py,pyMask);
 	return 0;
 }
 
-int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int pyUp[],int num,int pyMask[]){
+int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int pyUp[],int num,int max_pyMask){
 	for(int i=0;i<num;i++){
 		pyUp[i]=0;
-		searchUpCore(D,pxLeg[i],pyDown,th_up,pyUp[i],pyMask);
+		searchUpCore(D,pxLeg[i],pyDown,th_up,pyUp[i],max_pyMask);
 	}
 
 
@@ -176,37 +181,75 @@ int selPyUp(int pyUp[],int sel_diff,int &py,int num){
 	int index[num];
 	bubbleSort(pyUpSort,index,pyUp,num);
 
-	int diff[num - 1];
+	int diff;
 	int ave[num-1];
 	int num_val = 0;
 	int sum_pyUp =0;
 	for(int i=0;i<num-1;i++){
-		diff[i] = (pyUpSort[i+1] - pyUpSort[i]);
+		diff = (pyUpSort[i+1] - pyUpSort[i]);
 		ave[i] = 0;
-		if(diff[i] <= sel_diff){
+		if(diff <= sel_diff){
 			ave[i] = (pyUpSort[i] + pyUpSort[i+1])/2;
 			num_val ++;
 		}
-		cout << "pyUpSort["<<i<<"] = " << pyUpSort[i] << "\t";
-		cout << "index = " << index[i] << "\t";
-		cout << "ave["<<i<<"] = " << ave[i] << "\t";
-		cout << "sum = " << sum_pyUp<<endl;
+		cout << "......selPyUp : pyUpSort["<<i<<"] = " << pyUpSort[i] << "\t";
+		cout << "["<<i+1<<"] = " << pyUpSort[i+1] << "\t";
+		cout << "index = " << index[i] <<"  "<<index[i+1]<< "\t";
+		cout << "ave["<<i<<"] = " << ave[i] << endl;
 	}
 	if(num_val ==0){
-		return -1;
+		cout << "...selPyUp ; \t No group of 2 points! return -1" << endl;
+				return -1;
 	}
-	py = sum_pyUp / num_val;
+
+	//step 2
+	int aveSort[num-1],index2[num-1];
+	bubbleSort(aveSort,index2,ave,num-1);
+
+	int ave2[num-1];
+	int num_val2 = 0;
+
+	for(int i=0;i<num-2;i++){
+		ave2[i] = 0;
+		if(aveSort[i] !=0){
+			diff = aveSort[i+1] - aveSort[i];
+			if(diff < sel_diff){
+				ave2[i] = (aveSort[i] + aveSort[i+1])/2;
+				num_val2 ++;
+			}
+		}
+//		cout << "ave2["<<i<<"] = "<< ave2[i]<< "\tindex2 = " << index2[i] <<endl;
+	}
+
+	if(num_val2 == 0){
+		cout << "...selPyUp ; \t No group of 3 point! return -2" << endl;
+		return -2;
+	}
+
+
+
+
+	for(int i=0 ;i < num-2;i++){
+		if(ave2[i] != 0)
+		sum_pyUp +=  ave2[i];
+	}
+
+	py = sum_pyUp / num_val2;
 	//py = pyUp[3];
-	cout << "...selPyUp : \t num_val = " << num_val <<"\t";
+	cout << "...selPyUp : \t num_val2 = " << num_val2 <<"\t";
 	cout << "py_Up = " << py<<endl;
 	return 0;
 }
 
-int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py, int pyMask[]){
-	int height = (pyDown > 50) ? (pyDown - 50) : pyDown;
+
+
+int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py, int max_pyMask){
+	int height = (pyDown > 80) ? (pyDown - 80) : pyDown;
+	int pyMask = max_pyMask + 50;
 	int diff[height],max_diff = 0;
 	int tmp_py=0;
-	for(int i=pyMask[pxLeg];i<height;i++){
+//	for(int i=pyMask[pxLeg];i<height;i++){
+	for(int i=pyMask;i<height;i++){
 		diff[i] = abs(D.at<uchar>(i,pxLeg) - D.at<uchar>(i+5,pxLeg));
 		max_diff = (diff[i] >= max_diff) ? diff[i] : max_diff;
 //		cout << "diff [" << i <<"] = " << diff[i] <<"\t";
@@ -218,17 +261,17 @@ int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py, int pyMask[]){
 		max_diff = 300;
 
 	int now_th = (th_up <= max_diff *2/3) ? th_up : max_diff *2/3;
-	for(int i=height-1;i>=pyMask[pxLeg];i--){
+	for(int i=height-1;i>=pyMask;i--){
 		if(tmp_py ==0){
 			tmp_py = (diff[i] >= now_th) ? i: tmp_py;
 			//tmp_py = (diff >= max_diff *2/3) ? i: tmp_py;
 		}
 	}
 	py = tmp_py + 5;
-	cout << "......searchUpCore : \t th_up = " << th_up << "\t ";
-	cout << "max_diff = " << max_diff << "\t";
-	cout << "now_th = " << now_th << "\t pxLeg = " << pxLeg << "\t";
-	cout << "py_up = " << py+0.0 << endl;
+//	cout << "......searchUpCore : \t py_up = " << py + 0.0 << "\t ";
+//	cout << "max_diff = " << max_diff << "\t";
+//	cout << "now_th = " << now_th << "\t pxLeg = " << pxLeg << "\t";
+//	cout << endl;
 
 
 	return 0;
@@ -264,8 +307,9 @@ int xorImg2(Mat Ab, Mat Bf, Mat &C,int th_xor){
 }
 
 
-int getUpMask(Mat C, int pyMask[], int mask_width){
+int getUpMask(Mat C, int pyMask[], int mask_width,int &max_pyMask){
 	int isWhite;
+	max_pyMask = 0;
 	for(int i=0;i<C.cols;i++){
 		for(int j=0;j<C.rows-mask_width;j++){
 			checkLineWhite(C, j,i,mask_width, isWhite);
@@ -274,10 +318,34 @@ int getUpMask(Mat C, int pyMask[], int mask_width){
 				break;
 			}
 		}
+		max_pyMask = (pyMask[i] > max_pyMask) ? pyMask[i] : max_pyMask;
 		//cout << "pyMask["<<i<<"] = "<< pyMask[i] << endl;
 	}
-
+	cout << "...getUpMask : \t max_mask = " << max_pyMask << endl;
 	return 0;
 }
 
 
+
+int selPyUp2(int pyUp[],int sel_diff,int &py,int num){
+	int dist[num];
+	for(int i=0;i<num;i++){
+		dist[i] = 0;
+		for(int j=0;j<num;j++){
+			if(pyUp[j] < 20)
+				continue;
+			dist[i] += abs(pyUp[i] - pyUp[j]);
+		}
+		//cout << "distance of pyUp[" << i <<"] = "<< dist[i] <<endl;
+	}
+	int min_index = 0;
+	int min_dist = 999999;
+	for(int i=0;i<num;i++){
+		min_dist  = (dist[i] <= min_dist) ? dist[i] : min_dist;
+		min_index = (dist[i] <= min_dist) ? i : min_index;
+	}
+	cout << "...selPyUp2 : \t min_dist = " << min_dist << "\tmin_index =" << min_index <<endl;
+
+	py = pyUp[min_index];
+	return 0;
+}

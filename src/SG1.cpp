@@ -81,8 +81,8 @@ int main2(){
 	int mask_width = 20;	//pix width of py mask
 	int th_down = 150;
 	int th_up = 150;
-	int sel_diff =30;
-	float pix_cm_ratio =  0.01106;
+	int sel_diff =20;
+	float pix_cm_ratio =  0.01428;
 
 //--------- step ----------
 	String fn0,fn1;
@@ -101,7 +101,8 @@ int main2(){
 	Mat C;
 	xorImg2(Ab,Bf,C,th_xor);
 	int pyMask[C.cols];
-	getUpMask(C,pyMask,mask_width);
+	int max_pyMask;
+	getUpMask(C,pyMask,mask_width,max_pyMask);
 
 
 	int pxLeg[num];
@@ -115,8 +116,9 @@ int main2(){
 
 
 	Mat D = Af.clone();
-	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,pyMask);
-	selPyUp(pyUp,sel_diff,pyHead,num);
+	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,max_pyMask);
+	//selPyUp(pyUp,sel_diff,pyHead,num);
+	selPyUp2(pyUp,sel_diff,pyHead,num);
 
 	drawDCircle(D,pxLeg,pyDown,pyUp,num);
 	drawDLine(D , pxLeg,pyFoot,pyHead,num);
