@@ -43,3 +43,29 @@ int checkLineWhite(Mat C, int y,int x,int len,int & isWhite){
 
 	return 0;
 }
+
+
+
+int bubbleSort(int res[],int index[],int src[],int num){
+	for(int i=0;i<num;i++){
+		res[i] = src[i];
+		index[i] = i;
+	}
+
+	int temp;
+	for(int i=0;i<num-1;i++){
+		for(int j=0;j<num-1;j++){
+			if(res[j] > res[j+1]){
+				temp = res[j];
+				res[j] = res[j+1];
+				res[j+1] = temp;
+				temp = index[j];
+				index[j] = index[j+1];
+				index[j+1] = temp;
+			}
+		}
+	}
+
+
+	return 0;
+}

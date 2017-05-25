@@ -21,15 +21,15 @@ int getBackFn2(String & fn0){
 }
 
 int getFontFn2(String & fn0){
-	//fn0 = "t8/Mon May 22 16-40-33.png";
-	//fn0 = "t8/Mon May 22 16-42-01.png";
+	//fn0 = "t8/Mon May 22 16-40-33.png";			//one line skew litter
+	//fn0 = "t8/Mon May 22 16-42-01.png";				//liang xie
 	//fn0 = "t9/Tue May 23 16-49-48.png";
 	//fn0 = "t9/Tue May 23 17-28-40.png";
 	//fn0 = "t9/Tue May 23 17-32-09.png";
 	//fn0 = "t9/Tue May 23 16-55-16.png";			//head
 	//fn0 = "t9/Tue May 23 17-43-39.png";
 	//fn0 = "t9/Tue May 23 17-50-18.png";		//error
-	fn0 = "t9/Tue May 23 17-55-50.png";
+	//fn0 = "t9/Tue May 23 17-55-50.png";
 	cout << "...get font file:" << fn0 <<endl;
 	return 0;
 }
@@ -170,26 +170,34 @@ int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int pyUp[],int num,int py
 }
 
 
-int selPyUp(int pyUp[],int &py,int num){
+int selPyUp(int pyUp[],int sel_diff,int &py,int num){
 
-	int diff[num];
+	int pyUpSort[num];
+	int index[num];
+	bubbleSort(pyUpSort,index,pyUp,num);
+
+	int diff[num - 1];
+	int ave[num-1];
 	int num_val = 0;
 	int sum_pyUp =0;
 	for(int i=0;i<num-1;i++){
-		diff[i] = abs(pyUp[i] - pyUp[i+1]);
-		if(diff[i] <= 30){
+		diff[i] = (pyUpSort[i+1] - pyUpSort[i]);
+		ave[i] = 0;
+		if(diff[i] <= sel_diff){
+			ave[i] = (pyUpSort[i] + pyUpSort[i+1])/2;
 			num_val ++;
-			sum_pyUp += pyUp[i];
-//			cout << "pyUp["<<i<<"] = " << pyUp[i] << "\t";
-//			cout << "sum = " << sum_pyUp<<endl;
 		}
+		cout << "pyUpSort["<<i<<"] = " << pyUpSort[i] << "\t";
+		cout << "index = " << index[i] << "\t";
+		cout << "ave["<<i<<"] = " << ave[i] << "\t";
+		cout << "sum = " << sum_pyUp<<endl;
 	}
 	if(num_val ==0){
 		return -1;
 	}
-	//py = sum_pyUp / num_val;
-	py = pyUp[3];
-	cout << "...searchUp4 : \t num_val = " << num_val <<"\t";
+	py = sum_pyUp / num_val;
+	//py = pyUp[3];
+	cout << "...selPyUp : \t num_val = " << num_val <<"\t";
 	cout << "py_Up = " << py<<endl;
 	return 0;
 }

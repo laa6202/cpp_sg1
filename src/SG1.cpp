@@ -116,10 +116,12 @@ int main2(){
 
 	Mat D = Af.clone();
 	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,pyMask);
+	selPyUp(pyUp,sel_diff,pyHead,num);
+
 	drawDCircle(D,pxLeg,pyDown,pyUp,num);
 	drawDLine(D , pxLeg,pyFoot,pyHead,num);
 
-	int pix_shoe_height =pyDown -  pyUp;
+	int pix_shoe_height =pyFoot -  pyHead;
 	float cm_shoe_height = pix_shoe_height * pix_cm_ratio;
 	cout << "...result : \t pix_shoe_height = " << pix_shoe_height << "\t";
 	cout << "CM shoe height = "<<cm_shoe_height << endl;

@@ -32,7 +32,7 @@ int searchDownCore(Mat C, int pxLeg, int th_down, int &py);
 int searchUp3(Mat D, int pxLeg[], int pyDown,int th_up,int & py,int num, int pyMask[]);
 int searchUp4(Mat D, int pxLeg[], int pyDown,int th_up,int pyUp[],int num,int pyMask[]);
 int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py,int pyMask[]);
-
+int selPyUp(int pyUp[],int sel_diff,int &py,int num);
 
 int drawDLine(Mat &D , int pxLeg[],int pyFoot,int pyHead,int num);
 int drawDCircle(Mat &D, int pxLeg[],int pyDown[],int pyUp[],int num);

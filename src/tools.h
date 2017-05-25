@@ -19,6 +19,7 @@ int showMatInf(Mat M);
 
 float getSumLine(Mat M,int lineNo);
 int checkLineWhite(Mat C, int y,int x,int len,int & whiteOrNot);
+int bubbleSort(int res[],int index[],int src[],int num);
 
 
 
