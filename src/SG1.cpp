@@ -83,6 +83,8 @@ int main2(){
 	int th_up = 150;
 	int sel_diff =20;
 	float pix_cm_ratio =  0.01428;
+	int searchRange = 500;
+	float forceRatio = 4.0;
 
 //--------- step ----------
 	String fn0,fn1;
@@ -119,6 +121,7 @@ int main2(){
 	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,max_pyMask);
 	//selPyUp(pyUp,sel_diff,pyHead,num);
 	selPyUp2(pyUp,sel_diff,pyHead,num);
+	modifyPyHead(pyHead,pyFoot,max_pyMask,searchRange,forceRatio);
 
 	drawDCircle(D,pxLeg,pyDown,pyUp,num);
 	drawDLine(D , pxLeg,pyFoot,pyHead,num);

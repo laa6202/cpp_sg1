@@ -35,6 +35,8 @@ int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py,int max_pyMask);
 int selPyUp(int pyUp[],int sel_diff,int &py,int num);
 int selPyUp2(int pyUp[],int sel_diff,int &py,int num);
 
+int modifyPyHead(int &pyHead, int pyFoot, int max_pyMask,int searchRange,float forceRatio);
+
 int drawDLine(Mat &D , int pxLeg[],int pyFoot,int pyHead,int num);
 int drawDCircle(Mat &D, int pxLeg[],int pyDown[],int pyUp[],int num);
 

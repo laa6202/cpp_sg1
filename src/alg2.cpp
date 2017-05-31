@@ -14,7 +14,7 @@
 int getBackFn2(String & fn0){
 
 	//fn0 = "t8/Mon May 22 16-41-07.png";
-	//fn0 = "t8/Mon May 22 16-41-07.png";
+
 	fn0 = "t9/Tue May 23 16-49-54.png";
 	cout << "...get back file:" << fn0 <<endl;
 	return 0;
@@ -31,9 +31,9 @@ int getFontFn2(String & fn0){
 	//fn0 = "t9/Tue May 23 17-32-00.png";			//head
 	//fn0 = "t9/Tue May 23 17-43-39.png";			//you gen
 	//fn0 = "t9/Tue May 23 17-50-18.png";			//wuxian
-	//fn0 = "t9/Tue May 23 17-55-50.png";			//tuoxie	caizhi
+	fn0 = "t9/Tue May 23 17-55-50.png";			//tuoxie	caizhi
 	//fn0 = "t9/Tue May 23 17-43-57.png";			//head
-	fn0 = "t9/Tue May 23 18-03-00.png";
+	//fn0 = "t9/Tue May 23 18-03-00.png";
 
 	cout << "...get font file:" << fn0 <<endl;
 	return 0;
@@ -257,8 +257,8 @@ int searchUpCore(Mat D, int pxLeg,int pyDown,int th_up,int &py, int max_pyMask){
 	}
 
 
-	if(max_diff <= 50)
-		max_diff = 300;
+//	if(max_diff <= 50)
+//		max_diff = 300;
 
 	int now_th = (th_up <= max_diff *2/3) ? th_up : max_diff *2/3;
 	for(int i=height-1;i>=pyMask;i--){
@@ -347,5 +347,23 @@ int selPyUp2(int pyUp[],int sel_diff,int &py,int num){
 	cout << "...selPyUp2 : \t min_dist = " << min_dist << "\tmin_index =" << min_index <<endl;
 
 	py = pyUp[min_index];
+	return 0;
+}
+
+
+int modifyPyHead(int &pyHead, int pyFoot, int max_pyMask, int searchRange,float forceRatio){
+	int disHead = pyFoot - pyHead;
+	int disMask = (max_pyMask < 30) ? searchRange : pyFoot - max_pyMask;
+	if(disHead > disMask/2){
+		cout << "...modifyPyHead : \t modified! Force pyHead!"<<endl;
+		disHead = (int)(disMask / forceRatio);
+		pyHead = pyFoot - disHead;
+	}
+	else{
+		cout <<"...modifyPyHead : \t Keep pyHead ="<<pyHead<<endl;
+	}
+
+//	cout << "disHead = "<< disHead <<"\tdisMask = " << disMask <<endl;
+
 	return 0;
 }
