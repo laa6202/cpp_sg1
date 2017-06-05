@@ -11,12 +11,27 @@
 #include "opencv2/opencv.hpp"
 #include "alg.h"
 #include "alg2.h"
+#include "alg3.h"
 #include "imgCheck.h"
 
 using namespace std;
 using namespace cv;
 
-//String fn0 = "t5/31_br103_con125_st110.jpg";
+
+int save_file = 0;
+//String fr0 = "t11/Sat Jun 03 15-32-54.png";
+//String fn0 = "t11/Sat Jun 03 15-41-34.png";
+//String fn0 = "t11/Sat Jun 03 15-41-56.png";
+//String fn0 = "t11/Sat Jun 03 15-42-22.png";
+//String fn0 = "t11/Sat Jun 03 15-44-02.png";
+String fr0 = "t11/Sat Jun 03 15-44-21.png";	//No shoe
+//String fn0 = "t11/Sat Jun 03 15-45-49.png";
+//String fn0 = "t11/Sat Jun 03 15-46-08.png";
+//String fn0 = "t11/Sat Jun 03 15-47-07.png";
+//String fr1 = "t11/Sat Jun 03 15-48-29.png";	//ruler
+//String fn0 = "t11/Sat Jun 03 15-49-28.png";
+String fn0 = "t11/Sat Jun 03 15-49-50.png";
+
 
 int main1() {
 	cout << "!!!Hello SG1  alg1!!!" << endl; // prints !!!Hello World!!!
@@ -121,7 +136,7 @@ int main2(){
 	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,max_pyMask);
 	//selPyUp(pyUp,sel_diff,pyHead,num);
 	selPyUp2(pyUp,sel_diff,pyHead,num);
-	//modifyPyHead(pyHead,pyFoot,max_pyMask,searchRange,forceRatio);
+	modifyPyHead(pyHead,pyFoot,max_pyMask,searchRange,forceRatio);
 
 	drawDCircle(D,pxLeg,pyDown,pyUp,num);
 	drawDLine(D , pxLeg,pyFoot,pyHead,num);
@@ -150,8 +165,71 @@ int main2(){
 }
 
 
+
+int main3(){
+	cout << "--- SG1 main3 ---" << endl;
+
+	int pyFoot = 578;
+
+//----------- search FOOT --------
+	Mat R;
+	if(loadImg3(R,fr0,0)) exit(-2);
+
+	searchPyFoot(R,pyFoot,20);
+	cout <<endl;
+
+//------------ main ----------
+	Mat A;
+	if(loadImg3(A,fn0,1))	exit(-2);
+
+	Mat B0,B1,B2,B;
+	separateImg(B0,B1,B2,B,A);
+
+
+
+//----------- draw line for debug ---------
+	Mat Z0,Z1,Z2,Z;
+	Z0 = B0.clone();
+	Z1 = B1.clone();
+	Z2 = B2.clone();
+	Z  = B.clone();
+	drawYLine(Z0,Z1,Z2,Z);
+	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,pyFoot,2);
+
+	//drawXYCircleCore(R,240,pyFoot,3);
+
+
+
+//----------- show and save --------
+	imshow("main3",Z2);
+	while(1){
+		uchar key =  waitKey(50);
+		if(key == 'q')
+			break;
+	}
+
+	if(save_file == 1){
+		imwrite("R.jpg",R);
+		imwrite("A.jpg",A);
+		imwrite("B0.jpg",Z0);
+		imwrite("B1.jpg",Z1);
+		imwrite("B2.jpg",Z2);
+		imwrite("B.jpg",Z);
+
+	//	imwrite("Bf0.jpg",Bf0);
+	//	imwrite("Bf.jpg",Bf);
+	//	imwrite("C.jpg",C);
+	//	imwrite("D.jpg",D);
+	}
+
+
+	cout << "--- end ---" << endl;
+	return 0;
+}
+
+
 int main(){
-	main2();
+	main3();
 	return 0;
 }
 
