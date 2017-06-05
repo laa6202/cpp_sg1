@@ -121,7 +121,7 @@ int main2(){
 	searchUp4(D,pxLeg,pyFoot,th_up,pyUp,num,max_pyMask);
 	//selPyUp(pyUp,sel_diff,pyHead,num);
 	selPyUp2(pyUp,sel_diff,pyHead,num);
-	modifyPyHead(pyHead,pyFoot,max_pyMask,searchRange,forceRatio);
+	//modifyPyHead(pyHead,pyFoot,max_pyMask,searchRange,forceRatio);
 
 	drawDCircle(D,pxLeg,pyDown,pyUp,num);
 	drawDLine(D , pxLeg,pyFoot,pyHead,num);

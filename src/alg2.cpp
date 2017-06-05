@@ -31,10 +31,19 @@ int getFontFn2(String & fn0){
 	//fn0 = "t9/Tue May 23 17-32-00.png";			//head
 	//fn0 = "t9/Tue May 23 17-43-39.png";			//you gen
 	//fn0 = "t9/Tue May 23 17-50-18.png";			//wuxian
-	fn0 = "t9/Tue May 23 17-55-50.png";			//tuoxie	caizhi
+	//fn0 = "t9/Tue May 23 17-55-50.png";			//tuoxie	caizhi
 	//fn0 = "t9/Tue May 23 17-43-57.png";			//head
 	//fn0 = "t9/Tue May 23 18-03-00.png";
-
+	//fn0 = "t9/Sat Jun 03 14-21-43.png";
+	//fn0 = "t9/Sat Jun 03 14-28-25.png";
+	//fn0 = "t9/Sat Jun 03 14-31-48.png";
+	//fn0 = "t9/Sat Jun 03 14-33-47.png";
+	//fn0 = "t9/Sat Jun 03 14-36-53.png";
+	//fn0 = "t9/Sat Jun 03 14-38-20.png";
+	//fn0 = "t9/Sat Jun 03 14-41-19.png";
+	fn0 = "t9/Sat Jun 03 14-41-28.png";
+	//fn0 = "t9/Sat Jun 03 14-46-12.png";
+	//fn0 = "t9/Sat Jun 03 14-46-21.png";
 	cout << "...get font file:" << fn0 <<endl;
 	return 0;
 }
