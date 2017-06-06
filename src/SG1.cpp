@@ -12,6 +12,7 @@
 #include "alg.h"
 #include "alg2.h"
 #include "alg3.h"
+#include "tools.h"
 #include "imgCheck.h"
 
 using namespace std;
@@ -19,18 +20,19 @@ using namespace cv;
 
 
 int save_file = 0;
-//String fr0 = "t11/Sat Jun 03 15-32-54.png";
+	//String fr0 = "t11/Sat Jun 03 15-32-54.png";	//No shoe
 //String fn0 = "t11/Sat Jun 03 15-41-34.png";
 //String fn0 = "t11/Sat Jun 03 15-41-56.png";
 //String fn0 = "t11/Sat Jun 03 15-42-22.png";
 //String fn0 = "t11/Sat Jun 03 15-44-02.png";
-String fr0 = "t11/Sat Jun 03 15-44-21.png";	//No shoe
+	String fr0 = "t11/Sat Jun 03 15-44-21.png";	//No shoe
 //String fn0 = "t11/Sat Jun 03 15-45-49.png";
 //String fn0 = "t11/Sat Jun 03 15-46-08.png";
 //String fn0 = "t11/Sat Jun 03 15-47-07.png";
-//String fr1 = "t11/Sat Jun 03 15-48-29.png";	//ruler
+	//String fr1 = "t11/Sat Jun 03 15-48-29.png";	//ruler
 //String fn0 = "t11/Sat Jun 03 15-49-28.png";
-String fn0 = "t11/Sat Jun 03 15-49-50.png";
+//String fn0 = "t11/Sat Jun 03 15-49-50.png";
+String fn0 = "t11/Sat Jun 03 15-50-06.png";
 
 
 int main1() {
@@ -170,6 +172,7 @@ int main3(){
 	cout << "--- SG1 main3 ---" << endl;
 
 	int pyFoot = 578;
+	int aveGold = 230;
 
 //----------- search FOOT --------
 	Mat R;
@@ -182,26 +185,34 @@ int main3(){
 	Mat A;
 	if(loadImg3(A,fn0,1))	exit(-2);
 
-	Mat B0,B1,B2,B;
-	separateImg(B0,B1,B2,B,A);
+	Mat B;
+	cvtColor(A,B,CV_BGR2GRAY);
 
+	Mat C;
+	blanceAll(C,A,B,aveGold);
+
+
+	Mat D0,D1,D2,D;
+	separateImg(D0,D1,D2,D,C);
+	showPxLinePixel(D1,240,pyFoot,1);
 
 
 //----------- draw line for debug ---------
 	Mat Z0,Z1,Z2,Z;
-	Z0 = B0.clone();
-	Z1 = B1.clone();
-	Z2 = B2.clone();
-	Z  = B.clone();
+	Z0 = D0.clone();
+	Z1 = D1.clone();
+	Z2 = D2.clone();
+	Z  = D.clone();
 	drawYLine(Z0,Z1,Z2,Z);
 	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,pyFoot,2);
+	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,454,2);
 
 	//drawXYCircleCore(R,240,pyFoot,3);
 
 
 
 //----------- show and save --------
-	imshow("main3",Z2);
+	imshow("main3",Z1);
 	while(1){
 		uchar key =  waitKey(50);
 		if(key == 'q')

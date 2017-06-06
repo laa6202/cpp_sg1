@@ -6,6 +6,7 @@
  */
 
 #include "alg3.h"
+#include "tools.h"
 
 
 int loadImg3(Mat &A,String fn,int flag){
@@ -89,5 +90,23 @@ int searchPyFoot(Mat R,int &pyFoot,int thPyFoot){
 	}
 	pyFoot = minIndex;
 	cout << "...searchPyFoot : \t pyFoot = " << minIndex+0.0 << "\tminPixel = "<< minPixel+0.0 << endl;
+	return 0;
+}
+
+
+
+int blanceAll(Mat &C,Mat A,Mat B,int aveGold){
+	float sumB = getSumAll(B);
+	float aveB = sumB / B.cols / B.rows;
+	float aveRatio = aveGold / aveB;
+	cout << "...blanceAll :\t aveB = " << aveB << "\t aveRatio =  " << aveRatio << "\t";
+	cout << "aveGold = " << aveGold << endl;
+	C = A * aveRatio ;
+
+	Mat D;
+	cvtColor(C,D,CV_BGR2GRAY);
+	float sumD = getSumAll(D);
+	float aveD = sumD / D.cols / D.rows;
+	cout << "......aveC = " << aveD << endl;
 	return 0;
 }

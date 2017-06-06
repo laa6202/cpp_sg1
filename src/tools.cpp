@@ -65,7 +65,28 @@ int bubbleSort(int res[],int index[],int src[],int num){
 			}
 		}
 	}
-
-
 	return 0;
 }
+
+
+
+float getSumAll(Mat M){
+	float sum = 0.0;
+	for(int i=0;i<M.rows;i++)
+		sum += getSumLine(M,i);
+	return sum;
+}
+
+
+
+int showPxLinePixel(Mat M,int px,int pyFoot,int channel){
+	for(int i=20;i<pyFoot;i++){
+		if(M.channels() == 3)
+			cout << "M["<<i<<"]["<<px<<"]["<<channel<<"] = " << M.at<Vec3b>(i,px)[channel]+0.0 <<endl;
+		else
+			cout << "M["<<i<<"]["<<px<<"] = " << M.at<uchar>(i,px)+0.0 <<endl;
+	}
+	return 0;
+}
+
+
