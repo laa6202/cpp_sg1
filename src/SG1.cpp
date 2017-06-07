@@ -21,7 +21,7 @@ using namespace cv;
 
 int save_file = 0;
 	//String fr0 = "t11/Sat Jun 03 15-32-54.png";	//No shoe
-//String fn0 = "t11/Sat Jun 03 15-41-34.png";
+String fn0 = "t11/Sat Jun 03 15-41-34.png";
 //String fn0 = "t11/Sat Jun 03 15-41-56.png";
 //String fn0 = "t11/Sat Jun 03 15-42-22.png";
 //String fn0 = "t11/Sat Jun 03 15-44-02.png";
@@ -32,7 +32,115 @@ int save_file = 0;
 	//String fr1 = "t11/Sat Jun 03 15-48-29.png";	//ruler
 //String fn0 = "t11/Sat Jun 03 15-49-28.png";
 //String fn0 = "t11/Sat Jun 03 15-49-50.png";
-String fn0 = "t11/Sat Jun 03 15-50-06.png";
+//String fn0 = "t11/Sat Jun 03 15-50-06.png";
+//String fn0 = "t11/Sat Jun 03 15-50-34.png";
+//String fn0 = "t11/Sat Jun 03 15-51-00.png";
+//String fn0 = "t11/Sat Jun 03 15-51-16.png";
+//String fn0 = "t11/Sat Jun 03 15-51-25.png";		//failed!
+//String fn0 = "t11/Sat Jun 03 15-51-44.png";
+//String fn0 = "t11/Sat Jun 03 15-51-54.png";
+//String fn0 = "t11/Sat Jun 03 15-52-03.png";
+//String fn0 = "t11/Sat Jun 03 15-52-14.png";
+//String fn0 = "t11/Sat Jun 03 15-52-21.png";		//hard
+//String fn0 = "t11/Sat Jun 03 15-52-29.png";		//failed!
+//String fn0 = "t11/Sat Jun 03 15-52-38.png";
+//String fn0 = "t11/Sat Jun 03 15-52-47.png";
+//String fn0 = "t11/Sat Jun 03 15-52-55.png";
+//String fn0 = "t11/Sat Jun 03 15-53-15.png";
+//String fn0 = "t11/Sat Jun 03 15-53-24.png";
+//String fn0 = "t11/Sat Jun 03 15-54-24.png";		//hard
+//String fn0 = "t11/Sat Jun 03 15-54-42.png";		//hard
+//String fn0 = "t11/Sat Jun 03 15-55-06.png";
+//String fn0 = "t11/Sat Jun 03 15-59-00.png";
+
+
+
+int main3(){
+	cout << "--- SG1 main3 ---" << endl;
+
+	int pyFoot = 578;
+	int pyHead = 461;
+	int aveGold = 230;
+
+//----------- search FOOT --------
+	Mat R;
+	if(loadImg3(R,fr0,0)) exit(-2);
+
+	searchPyFoot(R,pyFoot,20);
+	cout <<endl;
+
+//------------ main ----------
+	Mat A;
+	if(loadImg3(A,fn0,1))	exit(-2);
+
+	Mat B;
+	cvtColor(A,B,CV_BGR2GRAY);
+
+	Mat C;
+	blanceAll(C,A,B,aveGold);
+
+
+	Mat D0,D1,D2,D;
+	separateImg(D0,D1,D2,D,C);
+	//showPxLinePixel(D1,240,pyFoot,1);
+
+	float aveNoise;
+	float rmsNoise;
+	int now;
+	float diff;
+	for(int i=20;i<pyFoot;i++){
+		aveBefor(D1,240,i,10,aveNoise,1);
+		rmsBefor(D1,240,i,10,aveNoise,rmsNoise,1);
+		now = D1.at<Vec3b>(i,240)[1];
+		diff = now - aveNoise;
+		cout << "M["<<i<<"]="<< now<< "\t r = " << abs(diff) / rmsNoise <<"\t";
+		cout <<"\t ave = " <<aveNoise << "\t";
+		cout << "diff = " << diff << "\t rms = " << rmsNoise << "\t";
+		cout << endl;
+	}
+
+
+//----------- draw line for debug ---------
+	Mat Z0,Z1,Z2,Z;
+	Z0 = D0.clone();
+	Z1 = D1.clone();
+	Z2 = D2.clone();
+	Z  = D.clone();
+	drawYLine(Z0,Z1,Z2,Z);
+	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,pyFoot,2);
+	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,pyHead,2);
+
+	//drawXYCircleCore(R,240,pyFoot,3);
+
+
+
+//----------- show and save --------
+	imshow("main3",Z1);
+	while(1){
+		uchar key =  waitKey(50);
+		if(key == 'q')
+			break;
+	}
+
+	if(save_file == 1){
+		imwrite("R.jpg",R);
+		imwrite("A.jpg",A);
+		imwrite("B0.jpg",Z0);
+		imwrite("B1.jpg",Z1);
+		imwrite("B2.jpg",Z2);
+		imwrite("B.jpg",Z);
+
+	//	imwrite("Bf0.jpg",Bf0);
+	//	imwrite("Bf.jpg",Bf);
+	//	imwrite("C.jpg",C);
+	//	imwrite("D.jpg",D);
+	}
+
+
+	cout << "--- end ---" << endl;
+	return 0;
+}
+
 
 
 int main1() {
@@ -167,76 +275,6 @@ int main2(){
 }
 
 
-
-int main3(){
-	cout << "--- SG1 main3 ---" << endl;
-
-	int pyFoot = 578;
-	int aveGold = 230;
-
-//----------- search FOOT --------
-	Mat R;
-	if(loadImg3(R,fr0,0)) exit(-2);
-
-	searchPyFoot(R,pyFoot,20);
-	cout <<endl;
-
-//------------ main ----------
-	Mat A;
-	if(loadImg3(A,fn0,1))	exit(-2);
-
-	Mat B;
-	cvtColor(A,B,CV_BGR2GRAY);
-
-	Mat C;
-	blanceAll(C,A,B,aveGold);
-
-
-	Mat D0,D1,D2,D;
-	separateImg(D0,D1,D2,D,C);
-	showPxLinePixel(D1,240,pyFoot,1);
-
-
-//----------- draw line for debug ---------
-	Mat Z0,Z1,Z2,Z;
-	Z0 = D0.clone();
-	Z1 = D1.clone();
-	Z2 = D2.clone();
-	Z  = D.clone();
-	drawYLine(Z0,Z1,Z2,Z);
-	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,pyFoot,2);
-	drawXYCircle(Z0,Z1,Z2,Z,Z.cols/2,454,2);
-
-	//drawXYCircleCore(R,240,pyFoot,3);
-
-
-
-//----------- show and save --------
-	imshow("main3",Z1);
-	while(1){
-		uchar key =  waitKey(50);
-		if(key == 'q')
-			break;
-	}
-
-	if(save_file == 1){
-		imwrite("R.jpg",R);
-		imwrite("A.jpg",A);
-		imwrite("B0.jpg",Z0);
-		imwrite("B1.jpg",Z1);
-		imwrite("B2.jpg",Z2);
-		imwrite("B.jpg",Z);
-
-	//	imwrite("Bf0.jpg",Bf0);
-	//	imwrite("Bf.jpg",Bf);
-	//	imwrite("C.jpg",C);
-	//	imwrite("D.jpg",D);
-	}
-
-
-	cout << "--- end ---" << endl;
-	return 0;
-}
 
 
 int main(){

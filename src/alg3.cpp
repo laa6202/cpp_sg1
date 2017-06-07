@@ -110,3 +110,40 @@ int blanceAll(Mat &C,Mat A,Mat B,int aveGold){
 	cout << "......aveC = " << aveD << endl;
 	return 0;
 }
+
+
+
+int aveBefor(Mat M,int px,int py,int len,float &aveNoise,int channel){
+	int sum = 0;
+
+	for(int i=py;i<py+len;i++){
+		if(M.channels() == 3)
+			sum += M.at<Vec3b>(i,px)[channel];
+		else
+			sum += M.at<uchar>(i,px);
+	}
+	aveNoise = (sum+0.0) / len;
+
+	return 0;
+}
+
+
+
+
+int rmsBefor(Mat M,int px,int py,int len,float aveNoise,float &rmsNoise,int channel){
+	float sumDiff =0;
+	float diff=0;
+	for(int i=py;i<py+len;i++){
+		if(M.channels() == 3){
+			diff = M.at<Vec3b>(i,px)[channel] - aveNoise;
+			sumDiff += (diff * diff);
+		}
+		else{
+			diff = M.at<uchar>(i,px) - aveNoise;
+			sumDiff += diff * diff;
+		}
+	}
+	rmsNoise = sqrt(sumDiff) / len;
+
+	return 0;
+}

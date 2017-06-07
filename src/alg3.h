@@ -29,6 +29,8 @@ int drawXYCircle(Mat & Z0,Mat &Z1, Mat &Z2, Mat & Z,int px,int py,int width = 1)
 int searchPyFoot(Mat R,int &pyFoot,int thPyFoot);
 
 int blanceAll(Mat &C,Mat A,Mat B,int aveGold);
+int aveBefor(Mat M,int px,int py,int len,float &aveNoise,int channel=0);
+int rmsBefor(Mat M,int px,int py,int len,float aveNoise, float &rmsNoise,int channel=0);
 
 
 #endif /* ALG3_H_ */
