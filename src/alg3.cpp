@@ -136,14 +136,67 @@ int rmsBefor(Mat M,int px,int py,int len,float aveNoise,float &rmsNoise,int chan
 	for(int i=py;i<py+len;i++){
 		if(M.channels() == 3){
 			diff = M.at<Vec3b>(i,px)[channel] - aveNoise;
-			sumDiff += (diff * diff);
+			//sumDiff += (diff * diff);
+			sumDiff += abs(diff) ;
 		}
 		else{
 			diff = M.at<uchar>(i,px) - aveNoise;
-			sumDiff += diff * diff;
+			//sumDiff += diff * diff;
+			sumDiff += abs(diff);
 		}
 	}
-	rmsNoise = sqrt(sumDiff) / len;
+	//rmsNoise = sqrt(sumDiff) / len;
+	rmsNoise = sumDiff / len;
 
+	return 0;
+}
+
+
+int absBlack(Mat &B, Mat A, int th){
+	B = A.clone();
+	for(int i=0;i<A.rows;i++)
+		for(int j=0;j<A.cols;j++){
+			if(A.channels() == 3){
+				B.at<Vec3b>(i,j)[0] = (A.at<Vec3b>(i,j)[0] >= th) ? 255:0;
+				B.at<Vec3b>(i,j)[1] = (A.at<Vec3b>(i,j)[1] >= th) ? 255:0;
+				B.at<Vec3b>(i,j)[2] = (A.at<Vec3b>(i,j)[2] >= th) ? 255:0;
+			}
+			else {
+				B.at<uchar>(i,j) = (A.at<uchar>(i,j) >= th) ? 255:0;
+			}
+		}
+	return 0;
+}
+
+
+
+int diffLen(Mat M,int px,int len,int different[],int ch){
+	int now;
+	for(int i=0;i<M.rows;i++){
+		now = M.at<Vec3b>(i,px)[ch];
+		different[i] = now;
+	}
+	for(int i=20;i<M.rows-20;i++){
+		different[i] = abs(M.at<Vec3b>(i,px)[ch] - M.at<Vec3b>(i+len,px)[ch]);
+	}
+	return 0;
+}
+
+
+
+int searchMask(Mat M, int px,int pyFoot,int thNum,int &pyMask,int ch){
+	int sumHit = 0;
+	for(int i=0;i<pyFoot-50;i++){
+		int now = M.at<Vec3b>(pyFoot-50-i,px)[ch];
+		if(now == 255)
+			sumHit++;
+		else
+			sumHit = 0;
+		if(sumHit >= thNum){
+			pyMask = pyFoot-50-i + thNum;
+			break;
+		}
+	}
+	cout << "...searchMask : \t pyMask = " << pyMask <<endl;
 	return 0;
 }

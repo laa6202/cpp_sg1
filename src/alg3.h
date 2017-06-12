@@ -31,6 +31,8 @@ int searchPyFoot(Mat R,int &pyFoot,int thPyFoot);
 int blanceAll(Mat &C,Mat A,Mat B,int aveGold);
 int aveBefor(Mat M,int px,int py,int len,float &aveNoise,int channel=0);
 int rmsBefor(Mat M,int px,int py,int len,float aveNoise, float &rmsNoise,int channel=0);
-
+int absBlack(Mat &B, Mat A, int th);
+int diffLen(Mat M,int px,int len,int different[],int ch=0);
+int searchMask(Mat M, int px,int pyFoot,int thNum,int &pyMask,int ch=0);
 
 #endif /* ALG3_H_ */

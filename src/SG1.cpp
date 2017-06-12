@@ -21,8 +21,8 @@ using namespace cv;
 
 int save_file = 0;
 	//String fr0 = "t11/Sat Jun 03 15-32-54.png";	//No shoe
-String fn0 = "t11/Sat Jun 03 15-41-34.png";
-//String fn0 = "t11/Sat Jun 03 15-41-56.png";
+//String fn0 = "t11/Sat Jun 03 15-41-34.png";
+String fn0 = "t11/Sat Jun 03 15-41-56.png";
 //String fn0 = "t11/Sat Jun 03 15-42-22.png";
 //String fn0 = "t11/Sat Jun 03 15-44-02.png";
 	String fr0 = "t11/Sat Jun 03 15-44-21.png";	//No shoe
@@ -59,7 +59,7 @@ int main3(){
 	cout << "--- SG1 main3 ---" << endl;
 
 	int pyFoot = 578;
-	int pyHead = 461;
+	int pyHead = 488;
 	int aveGold = 230;
 
 //----------- search FOOT --------
@@ -82,22 +82,23 @@ int main3(){
 
 	Mat D0,D1,D2,D;
 	separateImg(D0,D1,D2,D,C);
-	//showPxLinePixel(D1,240,pyFoot,1);
+//	showPxLinePixel(D1,240,pyFoot,1);
 
-	float aveNoise;
-	float rmsNoise;
-	int now;
-	float diff;
-	for(int i=20;i<pyFoot;i++){
-		aveBefor(D1,240,i,10,aveNoise,1);
-		rmsBefor(D1,240,i,10,aveNoise,rmsNoise,1);
-		now = D1.at<Vec3b>(i,240)[1];
-		diff = now - aveNoise;
-		cout << "M["<<i<<"]="<< now<< "\t r = " << abs(diff) / rmsNoise <<"\t";
-		cout <<"\t ave = " <<aveNoise << "\t";
-		cout << "diff = " << diff << "\t rms = " << rmsNoise << "\t";
-		cout << endl;
+
+
+	int diff5[D.rows];
+	diffLen(D1,240,5,diff5,1);
+	for(int i=20;i<pyFoot-20;i++){
+		int now = D1.at<Vec3b>(i,240)[1];
+		if(now == 255)
+			cout << i <<":" << now<< "\tdiff5 = "<< diff5[i]-255<<endl;
+		else
+			cout << i <<":" << now<< "\tdiff5 = "<< diff5[i]<<endl;
 	}
+
+	int pyMask;
+	searchMask(D1, 240,pyFoot,2,pyMask,1);
+
 
 
 //----------- draw line for debug ---------
