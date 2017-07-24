@@ -278,7 +278,7 @@ int main2(){
 
 
 
-int main(){
+int main_bak(){
 	main3();
 	return 0;
 }
