@@ -90,3 +90,11 @@ int showPxLinePixel(Mat M,int px,int pyFoot,int channel){
 }
 
 
+uchar myMax(uchar a,uchar b){
+	return a>b?a:b;
+}
+
+uchar myMin(uchar a,uchar b){
+	return a<b?a:b;
+}
+
